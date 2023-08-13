@@ -208,7 +208,7 @@ describe('Our first suite', () => {
 
     })  
     
-    it.only('Datepicker', () => {
+    it('Datepicker', () => {
         /*
         Date() object: obtiene la fecha actual
         Obtengo días y meses futuros, y los uso como condiciones para clicker las flechitas y modificar el mes
@@ -240,6 +240,19 @@ describe('Our first suite', () => {
             let dateAssert = selectDayFromCurrent(100)
             cy.wrap(input).invoke('prop', 'value').should('contain', dateAssert)
         })
+
+    })
+
+    it.only('Lists and dropdowns', () => {
+        cy.visit('/')
+
+        //DROPDOWN:
+        cy.get('nav nb-select').click()
+        cy.get('.options-list').contains('Dark').click()
+        cy.get('nav nb-select').should('contain', 'Dark')
+        // Background color change: Style (hex #222b45) cambiarlo a RGB 34, 43, 69
+        cy.get('nb-layout-header nav').should('have.css', 'background-color', 'rgb(34, 43, 69)')
+
 
     })
 })
