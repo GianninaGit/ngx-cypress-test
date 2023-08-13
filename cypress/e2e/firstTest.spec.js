@@ -197,7 +197,7 @@ describe('Our first suite', () => {
         })
     })
 
-    it.only('Checkbox', () => {
+    it('Checkbox', () => {
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Modal & Overlays').click()
         cy.contains('Toastr').click()
@@ -206,5 +206,40 @@ describe('Our first suite', () => {
         cy.get('[type="checkbox"]').check({force: true})
         cy.get('[type="checkbox"]').eq(0).click({force: true})
 
-    })    
+    })  
+    
+    it.only('Datepicker', () => {
+        /*
+        Date() object: obtiene la fecha actual
+        Obtengo días y meses futuros, y los uso como condiciones para clicker las flechitas y modificar el mes
+        Se extrajo la función del test, para reutilizarla
+        */
+        function selectDayFromCurrent(day) {
+            let date = new Date()
+            date.setDate(date.getDate() + day)
+            let futureDay = date.getDate()
+            let futureMonth = date.toLocaleString('default', {month: 'short'})
+            let dateAssert = futureMonth + ' ' + futureDay + ', ' + date.getFullYear()
+            cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttribute => {
+                if(!dateAttribute.includes(futureMonth)){
+                    cy.get('[data-name="chevron-right"]').click()
+                    selectDayFromCurrent(day)
+                } else {
+                    cy.get('nb-calendar-day-picker [class="day-cell ng-star-inserted"]').contains(futureDay).click()
+                }
+            })
+            return dateAssert
+        }
+
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Forms').click()
+        cy.contains('Datepicker').click()
+
+        cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
+            cy.wrap(input).click()
+            let dateAssert = selectDayFromCurrent(100)
+            cy.wrap(input).invoke('prop', 'value').should('contain', dateAssert)
+        })
+
+    })
 })
