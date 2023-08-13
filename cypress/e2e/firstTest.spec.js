@@ -138,13 +138,18 @@ describe('Our first suite', () => {
 
         // Get text from web page:
         // 1:
-        cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+        cy.get('[for="exampleInputEmail1"]')
+            .should('contain', 'Email address')
+            .should('have.class', 'label')
+            .and('have.text', 'Email address')
         // 2:
         cy.get('[for="exampleInputEmail1"]').then( parametroDeFuncion => {
             expect(parametroDeFuncion.text()).to.equal('Email address')
             //guardo el resultado de la fc en el parametro (Jquery element) y 
             // le aplico JQ method: text() para obtener el texto
             // y luego hago assertion
+            expect(parametroDeFuncion).to.have.class('label')
+            expect(parametroDeFuncion).to.have.text('Email address')
         })
         // 3: Invoke command: texto
         cy.get('[for="exampleInputEmail1"]').invoke('text').then(text => {
@@ -208,7 +213,7 @@ describe('Our first suite', () => {
 
     })  
     
-    it('Datepicker', () => {
+    it.only('Datepicker', () => {
         /*
         Date() object: obtiene la fecha actual
         Obtengo días y meses futuros, y los uso como condiciones para clicker las flechitas y modificar el mes
@@ -239,6 +244,7 @@ describe('Our first suite', () => {
             cy.wrap(input).click()
             let dateAssert = selectDayFromCurrent(100)
             cy.wrap(input).invoke('prop', 'value').should('contain', dateAssert)
+            cy.wrap(input).should('have.value', dateAssert)
         })
 
     })
@@ -328,7 +334,7 @@ describe('Our first suite', () => {
         cy.get('nb-tooltip').should('contain', 'This is a tooltip')
     })
 
-    it.only('Dialog box', () => {
+    it('Dialog box', () => {
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Tables & Data').click()
         cy.contains('Smart Table').click()
