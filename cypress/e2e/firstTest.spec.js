@@ -246,13 +246,35 @@ describe('Our first suite', () => {
     it.only('Lists and dropdowns', () => {
         cy.visit('/')
 
-        //DROPDOWN:
+        // 1 DROPDOWN:
         cy.get('nav nb-select').click()
         cy.get('.options-list').contains('Dark').click()
-        cy.get('nav nb-select').should('contain', 'Dark')
+        cy.get('nav nb-select').should('contain', 'Dark') //esto desaparece luego de clickerarlo!
         // Background color change: Style (hex #222b45) cambiarlo a RGB 34, 43, 69
         cy.get('nb-layout-header nav').should('have.css', 'background-color', 'rgb(34, 43, 69)')
 
+        // 2 LISTS:
+        cy.get('nav nb-select').then(dropdown => {
+            cy.wrap(dropdown).click()
+            // .each() puede usar hasta 3 parametros: 1: iterador para cada loop, 2: índice
+            cy.get('.options-list nb-option').each((listItem, index) => {
+                const itemText = listItem.text().trim() //.trim() elimina el espacio que hay al inicio de cada palabra
+                
+                const colors = {
+                    "Light" : "rgb(255, 255, 255)", 
+                    "Dark" : "rgb(34, 43, 69)",
+                    "Cosmic" : "rgb(50, 50, 89)",
+                    "Corporate" : "rgb(255, 255, 255)"
+                }
 
+                cy.wrap(listItem).click()
+                cy.wrap(dropdown).should('contain', itemText)
+                cy.get('nb-layout-header nav').should('have.css', 'background-color', colors[itemText])
+                
+                if(index < 3) {
+                    cy.wrap(dropdown).click()
+                }
+            })
+        })
     })
 })
