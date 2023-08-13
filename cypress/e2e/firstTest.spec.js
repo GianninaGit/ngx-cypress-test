@@ -162,7 +162,7 @@ describe('Our first suite', () => {
             })
     })
     // 5: Invoke command: usar propiedades de los elem:
-    it.only('Assert property of text', () => {
+    it('Assert property of text', () => {
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Forms').click()
         cy.contains('Datepicker').click()
@@ -173,6 +173,28 @@ describe('Our first suite', () => {
                 cy.wrap(input).invoke('prop', 'value')
                     .should('contain', 'Aug 14, 2023')
             })
+    })
+
+    it.only('Radio button', () => {
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
+        
+        cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then( threeRadioButtons => {
+            cy.wrap(threeRadioButtons)
+                .first() // = .eq(0)
+                .check({force: true})
+                .should('be.checked')
+            cy.wrap(threeRadioButtons)
+                .eq(1)
+                .check({force: true})
+            cy.wrap(threeRadioButtons)
+                .first()
+                .should('not.be.checked')
+            cy.wrap(threeRadioButtons)
+                .eq(2)
+                .should('be.disabled')
+        })
     })
 
 })
