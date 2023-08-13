@@ -76,7 +76,18 @@ describe('Our first suite', () => {
         cy.contains('nb-card', 'Horizontal form').find('[type="email"]')
     })
 
-    it.only('Then and Wrap methods', () => {
+    /**Cypress:
+        Busco el locator nb-card con el texto y lo guardo en en la funcion "firstForm"
+         sería: function FunctionName(firstForm) -es un parametro-.
+         luego le aplico find y busco el texto, guardándolo en una const
+        Al usar .then, firstForm deja de ser un elem de cypress, y pasa a ser
+              un elem Jquery object. 
+        JQuery no admite fc como .click() or .type() or .should() or find()
+        JQuery sí admite: .find() .text() .to.equal() 
+              y guardar el parametro en una constante para reutilizarla
+        Para convertir la JQuery en Cypres elemnt, uso cy.wrap()*/
+
+    it('Then and Wrap methods', () => {
 
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Forms').click()
@@ -100,16 +111,6 @@ describe('Our first suite', () => {
         fistForm.find('[for="inputPassword2"]').should('contain', 'Password')
         */
 
-        //Cypress:
-        // Busco el locator nb-card con el texto y lo guardo en en la funcion "firstForm"
-        // sería: function FunctionName(firstForm) -es un parametro-.
-        // luego le aplico find y busco el texto, guardándolo en una const
-        // Al usar .then, firstForm deja de ser un elem de cypress, y pasa a ser
-        //      un elem Jquery object. 
-        // JQuery no admite fc como .click() or .type() or .should() or find()
-        // JQuery sí admite: .find() .text() .to.equal() 
-        //      y guardar el parametro en una constante para reutilizarla
-        // Para convertir la JQuery en Cypres elemnt, uso cy.wrap()
         cy.contains('nb-card', 'Using the Grid').then(firstForm => {
             const emailLabelFirst = firstForm.find('[for="inputEmail1"]').text()
             expect(emailLabelFirst).to.equal('Email')
@@ -128,7 +129,50 @@ describe('Our first suite', () => {
 
             })
         })
+    })
 
+    it('Invoke command', () => {
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
+
+        // Get text from web page:
+        // 1:
+        cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+        // 2:
+        cy.get('[for="exampleInputEmail1"]').then( parametroDeFuncion => {
+            expect(parametroDeFuncion.text()).to.equal('Email address')
+            //guardo el resultado de la fc en el parametro (Jquery element) y 
+            // le aplico JQ method: text() para obtener el texto
+            // y luego hago assertion
+        })
+        // 3: Invoke command: texto
+        cy.get('[for="exampleInputEmail1"]').invoke('text').then(text => {
+            expect(text).to.equal('Email address')
+        })
+        // 4: Invoke command: checkbox, uso elem padre
+        cy.contains('nb-card', 'Basic form')
+            .find('nb-checkbox')
+            .click()
+            .find('.custom-checkbox')
+            .invoke('attr', 'class')
+            //.should('contain', 'checked')
+            .then(parametro => {
+                expect(parametro).to.equal('custom-checkbox checked')
+            })
+    })
+    // 5: Invoke command: usar propiedades de los elem:
+    it.only('Assert property of text', () => {
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Forms').click()
+        cy.contains('Datepicker').click()
+
+        cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
+                cy.wrap(input).click()
+                cy.get('nb-calendar-day-picker').contains('14').click()
+                cy.wrap(input).invoke('prop', 'value')
+                    .should('contain', 'Aug 14, 2023')
+            })
     })
 
 })
