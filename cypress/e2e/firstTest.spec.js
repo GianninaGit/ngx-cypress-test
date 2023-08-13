@@ -52,7 +52,7 @@ describe('Our first suite', () => {
     .contain: busca elem by TEXT, y by LOCATORS
     */
 
-    it.only('Second test: Find Sign In button with MY LOCATOR', () => {
+    it('Second test: Find Sign In button with MY LOCATOR', () => {
 
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Forms').click()
@@ -74,6 +74,61 @@ describe('Our first suite', () => {
 
         //Find nb-card, which contains Horiz, y dentro, buscar el Attr type
         cy.contains('nb-card', 'Horizontal form').find('[type="email"]')
+    })
+
+    it.only('Then and Wrap methods', () => {
+
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
+
+        /*
+        Cypress repetitivo:
+            cy.contains('nb-card', 'Using the Grid').find('[for="inputEmail1"]')
+                .should('contain', 'Email')
+            cy.contains('nb-card', 'Using the Grid').find('[for="inputPassword2"]')
+                .should('contain', 'Password')
+
+            cy.contains('nb-card', 'Basic form').find('[for="exampleInputEmail1"]')
+                .should('contain', 'Email address')
+            cy.contains('nb-card', 'Basic form').find('[for="exampleInputPassword1"]')
+                .should('contain', 'Password')
+
+        Selenium:
+        const firstForm = cy.contains('nb-card', 'Using the Grid')
+        firstForm.find('[for="inputEmail1"]').should('contain', 'Email')
+        fistForm.find('[for="inputPassword2"]').should('contain', 'Password')
+        */
+
+        //Cypress:
+        // Busco el locator nb-card con el texto y lo guardo en en la funcion "firstForm"
+        // sería: function FunctionName(firstForm) -es un parametro-.
+        // luego le aplico find y busco el texto, guardándolo en una const
+        // Al usar .then, firstForm deja de ser un elem de cypress, y pasa a ser
+        //      un elem Jquery object. 
+        // JQuery no admite fc como .click() or .type() or .should() or find()
+        // JQuery sí admite: .find() .text() .to.equal() 
+        //      y guardar el parametro en una constante para reutilizarla
+        // Para convertir la JQuery en Cypres elemnt, uso cy.wrap()
+        cy.contains('nb-card', 'Using the Grid').then(firstForm => {
+            const emailLabelFirst = firstForm.find('[for="inputEmail1"]').text()
+            expect(emailLabelFirst).to.equal('Email')
+
+            const passwordLabelFirst = firstForm.find('[for="inputPassword2"]').text()
+            expect(passwordLabelFirst).to.equal('Password')
+        
+
+            cy.contains('nb-card', 'Basic form').then(secondForm => {
+                const passwordLabelSecond = secondForm.find('[for="exampleInputPassword1"]').text()
+                expect(passwordLabelSecond).to.equal(passwordLabelFirst)
+
+                cy.wrap(secondForm).find('[for="exampleInputEmail1"]')
+                .should('contain', 'Email address')
+                
+
+            })
+        })
+
     })
 
 })
