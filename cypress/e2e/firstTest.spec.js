@@ -175,7 +175,7 @@ describe('Our first suite', () => {
             })
     })
 
-    it.only('Radio button', () => {
+    it('Radio button', () => {
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
@@ -197,4 +197,14 @@ describe('Our first suite', () => {
         })
     })
 
+    it.only('Checkbox', () => {
+        cy.visit('/') //Ya tengo la URL en .config
+        cy.contains('Modal & Overlays').click()
+        cy.contains('Toastr').click()
+
+        // .check() marca todo, si quiero desmarcar: .click()
+        cy.get('[type="checkbox"]').check({force: true})
+        cy.get('[type="checkbox"]').eq(0).click({force: true})
+
+    })    
 })
