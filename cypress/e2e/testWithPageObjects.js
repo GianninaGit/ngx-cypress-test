@@ -10,5 +10,8 @@ describe('Test with Page Objects', () => {
         //Reutilizar: ir a support, creo new folder y navigationPage.js - Llamar al objeto
         navigateTo.formLayoutPage()
         navigateTo.datePickerPage()
+        navigateTo.toasterPage()
+        navigateTo.smartTablesPage()
+        navigateTo.tooltipPage()
     })
 })
