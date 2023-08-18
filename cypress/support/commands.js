@@ -35,3 +35,8 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('openHomePage', () => {
+    cy.visit('/')
+})
+//ver mas en docs.cypress.io/api/cypress-api/custom-commands
