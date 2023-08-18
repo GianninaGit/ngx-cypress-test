@@ -48,7 +48,7 @@ describe('Our first suite', () => {
 
     /*
     .get: busca elem en el DOM 
-    .find: busca elem en el PARENT elem
+    .find: busca CHILD elem en el PARENT elem
     .contain: busca elem by TEXT, y by LOCATORS
     */
 
@@ -132,6 +132,28 @@ describe('Our first suite', () => {
     })
 
     it('Invoke command', () => {
+
+        /* REPASAR VIDEO 25 (invoke) y 31 (assertions)
+        <div class="form-group row">
+            <label class="col-sm-2 label">Radios</label>
+        </div>
+        Get the value of the class for <label> web element using "invoke()" command:
+        cy.get('label').invoke('attr', 'class')
+
+        Get the <div>, save the context using "then()" and then click on "label":
+        cy.get('div').then(element =>{
+            cy.wrap(element).find('label').click()
+        })
+
+        What syntax for the assertion of the text "Radios" is correct?:
+        cy.get('label').should('contain', 'Radios')
+
+        What syntax for the assertion of the class value "label" is correct?:
+        cy.get('label').invoke('attr', 'class').then(class => {
+            expect(class).to.contain('label')
+        })
+        */
+
         cy.visit('/') //Ya tengo la URL en .config
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
@@ -213,7 +235,7 @@ describe('Our first suite', () => {
 
     })  
     
-    it.only('Datepicker', () => {
+    it('Datepicker', () => {
         /*
         Date() object: obtiene la fecha actual
         Obtengo días y meses futuros, y los uso como condiciones para clicker las flechitas y modificar el mes
@@ -309,7 +331,7 @@ describe('Our first suite', () => {
             cy.wrap(tableColums).eq(3).should('contain', 'Bondar')
         })
 
-        // 3:
+        // 3: 
         const age = [20, 30, 40, 200]
         cy.wrap(age).each(age => {
             cy.get('thead [placeholder="Age"]').clear().type(age)
