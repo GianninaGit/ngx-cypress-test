@@ -235,7 +235,7 @@ describe('Our first suite', () => {
 
     })  
     
-    it.only('Datepicker', () => {
+    it('Datepicker', () => {
         /*
         Date() object: obtiene la fecha actual
         Obtengo días y meses futuros, y los uso como condiciones para clicker las flechitas y modificar el mes
@@ -331,7 +331,7 @@ describe('Our first suite', () => {
             cy.wrap(tableColums).eq(3).should('contain', 'Bondar')
         })
 
-        // 3:
+        // 3: 
         const age = [20, 30, 40, 200]
         cy.wrap(age).each(age => {
             cy.get('thead [placeholder="Age"]').clear().type(age)
